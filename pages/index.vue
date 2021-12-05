@@ -2,8 +2,10 @@
   <div>
     <div v-for="beer in beers" :key="beer.id">{{ beer.name }}</div>
     <div class="mt-12">
-      <div v-for="mountain in mountains" :key="mountain.id"> {{ mountain.name }}</div>
+      {{ beer }}
     </div>
+    <br /><br />
+    <button @click="loadBeer">Load Beer</button>
   </div>
 </template>
 
@@ -30,18 +32,27 @@ export default Vue.extend({
   },
   data() {
     return {
-      mountains: []
+      beer: {}
     }
   },
   async fetch(): Promise<void> {
-    const result: any = await this.$axios.$get('https://api.nuxtjs.dev/mountains')
+    console.log('Fetch is being executed')
+
+    const result: any = await this.$axios.$get(`https://api.nuxtjs.dev/beers/${this.$store.state.beerSlug}`)
 
     console.log('Fetch has been executed')
 
-    this.mountains = result.map((beer: any) => ({
-      id: beer.slug,
-      name: beer.title,
-    }))
+    this.beer = {
+      id: result.slug,
+      name: result.name,
+    }
+  },
+  fetchOnServer: true,
+  methods: {
+    loadBeer() {
+      this.$store.commit('setBeerSlug', 'black-label')
+      this.$fetch()
+    },
   },
 })
 </script>
