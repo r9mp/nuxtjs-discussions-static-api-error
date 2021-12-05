@@ -43,5 +43,6 @@ export default Vue.extend({
       name: beer.title,
     }))
   },
+  fetchOnServer: false,
 })
 </script>
